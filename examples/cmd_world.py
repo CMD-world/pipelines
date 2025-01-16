@@ -1,8 +1,6 @@
-from typing import List, Union, Generator, Iterator
-from schemas import OpenAIChatMessage
+import requests
 from pydantic import BaseModel
-import subprocess
-
+from typing import List, Union, Generator, Iterator
 
 class Pipeline:
     class Valves(BaseModel):
@@ -23,4 +21,14 @@ class Pipeline:
     def pipe(
         self, user_message: str, model_id: str, messages: List[dict], body: dict
     ) -> Union[str, Generator, Iterator]:
-        return user_message
+        response = requests.post(
+            "http://localhost:5174/api/commands.run",
+            json={
+                "slug": self.valves.command,
+                "prompt": user_message
+            },
+            headers={
+                "Authorization": f"Bearer {self.valves.api_key}"
+            }
+        )
+        return response.json()["result"]["data"]
