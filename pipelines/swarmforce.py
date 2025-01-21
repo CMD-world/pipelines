@@ -1,6 +1,5 @@
 import requests
 from config import SWARMFORCE_URL
-from pydantic import BaseModel
 from typing import List, Union, Generator, Iterator
 
 class Pipeline:
@@ -19,7 +18,7 @@ class Pipeline:
             response = requests.post(
                 f"{SWARMFORCE_URL}/api/commands.run",
                 json={
-                    "id": platform['id'],
+                    "id": platform["id"],
                     "prompt": user_message
                 },
                 headers={
