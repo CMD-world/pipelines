@@ -13,6 +13,7 @@ class Pipeline:
         platform = body.get("platform")
         if not (platform and platform.get("id") and platform.get("key")):
             return "Chat must be linked to a command to use SwarmForce. Go to swarmforce.com and start new chat there!"
+        print(f"Got platform: {platform}")
 
         try:
             response = requests.post(
