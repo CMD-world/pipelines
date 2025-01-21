@@ -13,3 +13,4 @@ except ImportError:
 
 API_KEY = os.getenv("PIPELINES_API_KEY", "0p3n-w3bu!")
 PIPELINES_DIR = os.getenv("PIPELINES_DIR", "./pipelines")
+SWARMFORCE_URL = os.getenv("SWARMFORCE_URL", "http://localhost:5174")
