@@ -1,10 +1,10 @@
 import requests
-from config import SWARMFORCE_URL
+from config import CMDWORLD_URL
 from typing import List, Union, Generator, Iterator
 
 class Pipeline:
     def __init__(self):
-        self.name = "SwarmForce"
+        self.name = "CMD.world"
 
     def pipe(
         self, user_message: str, model_id: str, messages: List[dict], body: dict
@@ -12,12 +12,12 @@ class Pipeline:
         print(f"Running command for user message: '{user_message}'")
         platform = body.get("platform")
         if not (platform and platform.get("id") and platform.get("key")):
-            return "Chat must be linked to a command to use SwarmForce. Go to swarmforce.com and start new chat there!"
+            return "Chat must be linked to a command to use CMD.world. Go to CMD.world and start new chat there!"
         print(f"Got platform: {platform}")
 
         try:
             response = requests.post(
-                f"{SWARMFORCE_URL}/api/commands.run",
+                f"{CMDWORLD_URL}/api/commands.run",
                 json={
                     "id": platform["id"],
                     "prompt": user_message
