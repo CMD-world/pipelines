@@ -1,3 +1,4 @@
+import json
 import requests
 from config import CMDWORLD_URL
 from typing import List, Union, Generator, Iterator
@@ -16,17 +17,29 @@ class Pipeline:
         print(f"Got platform: {platform}")
 
         try:
-            response = requests.post(
-                f"{CMDWORLD_URL}/api/commands.run",
-                json={
+            # Get SSE connection
+            response = requests.get(
+                f"{CMDWORLD_URL}/api/run",
+                params={
                     "id": platform["id"],
                     "prompt": user_message
                 },
                 headers={
-                    "Authorization": f"Bearer {platform['key']}"
-                }
+                    "Authorization": f"Bearer {platform['key']}",
+                    "Accept": "text/event-stream"
+                },
+                stream=True
             )
-            body = response.json()
-            return body["result"]["data"]
+            response.raise_for_status()
+
+            # Parse each chunk and return
+            for chunk in response.iter_content(chunk_size=None, decode_unicode=True):
+                if chunk:
+                    try:
+                        data = json.loads(chunk.replace("data: ", ""))
+                        if "content" in data:
+                            yield data["content"]
+                    except json.JSONDecodeError:
+                        continue
         except:
             return "Failed to process response. Try again later!"
